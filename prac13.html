@@ -1,0 +1,270 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DevStream - Learning Resource Manager (Prac 13)</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f3ff;
+            color: #312e81;
+            padding: 30px;
+            margin: 0;
+        }
+
+        .container {
+            max-width: 750px;
+            margin: auto;
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            border: 2px solid #a78bfa;
+            box-shadow: 0 5px 12px rgba(0,0,0,0.08);
+        }
+
+        h2 {
+            color: #6d28d9;
+            text-align: center;
+        }
+
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        input {
+            padding: 10px;
+            border: 1px solid #c4b5fd;
+            border-radius: 6px;
+            flex: 1;
+            min-width: 130px;
+        }
+
+        button {
+            padding: 10px 15px;
+            background-color: #7c3aed;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        button:hover {
+            background-color: #5b21b6;
+        }
+
+        .delete-btn {
+            background-color: #dc2626;
+        }
+
+        ol {
+            background-color: #f5f3ff;
+            padding: 20px 40px;
+            border-radius: 8px;
+        }
+
+        li {
+            margin: 10px 0;
+            font-weight: 600;
+            padding: 5px;
+        }
+
+        .message {
+            background-color: #ede9fe;
+            padding: 10px;
+            border-radius: 6px;
+            margin-top: 12px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+
+        <h2>💻 DevStream Learning Resource Manager</h2>
+
+        <div class="controls">
+
+            <input type="text" id="addInput"
+                   placeholder="Enter course name">
+
+            <button onclick="addBook()">Add Course</button>
+
+            <input type="number" id="deleteInput"
+                   placeholder="Course number">
+
+            <button class="delete-btn" onclick="deleteBook()">
+                Delete
+            </button>
+
+            <input type="number" id="updateNumber"
+                   placeholder="Course number">
+
+            <input type="text" id="updateText"
+                   placeholder="New course name">
+
+            <button onclick="updateBook()">Update</button>
+
+            <input type="text" id="searchInput"
+                   placeholder="Search courses">
+
+            <button onclick="searchBooks()">Search</button>
+
+            <button onclick="showAll()">Show All</button>
+
+        </div>
+
+        <h3>Available Courses</h3>
+
+        <ol id="bookList"></ol>
+
+        <div id="message" class="message">
+            Learning resource manager is ready.
+        </div>
+
+    </div>
+
+    <script>
+
+        let books = [
+            "C Programming",
+            "HTML and CSS",
+            "JavaScript Development",
+            "Python Programming",
+            "Data Structures"
+        ];
+
+        function displayBooks(list = books) {
+
+            const ol = document.getElementById("bookList");
+
+            ol.innerHTML = "";
+
+            list.forEach(function(book) {
+
+                const li = document.createElement("li");
+
+                li.textContent = book;
+
+                ol.appendChild(li);
+
+            });
+
+        }
+
+        function addBook() {
+
+            const value = document.getElementById("addInput").value.trim();
+
+            if (value === "") {
+                document.getElementById("message").innerText =
+                    "Please enter a course name.";
+                return;
+            }
+
+            books.push(value);
+
+            document.getElementById("addInput").value = "";
+
+            displayBooks();
+
+            document.getElementById("message").innerText =
+                "Course added successfully!";
+        }
+
+        function deleteBook() {
+
+            const index = parseInt(
+                document.getElementById("deleteInput").value
+            ) - 1;
+
+            if (index >= 0 && index < books.length) {
+
+                const removed = books.splice(index, 1);
+
+                document.getElementById("deleteInput").value = "";
+
+                displayBooks();
+
+                document.getElementById("message").innerText =
+                    removed[0] + " deleted successfully!";
+
+            } else {
+
+                document.getElementById("message").innerText =
+                    "Please enter a valid course number.";
+
+            }
+
+        }
+
+        function updateBook() {
+
+            const index = parseInt(
+                document.getElementById("updateNumber").value
+            ) - 1;
+
+            const newName = document.getElementById("updateText").value.trim();
+
+            if (index >= 0 && index < books.length && newName !== "") {
+
+                books[index] = newName;
+
+                document.getElementById("updateNumber").value = "";
+                document.getElementById("updateText").value = "";
+
+                displayBooks();
+
+                document.getElementById("message").innerText =
+                    "Course updated successfully!";
+
+            } else {
+
+                document.getElementById("message").innerText =
+                    "Enter a valid course number and new course name.";
+
+            }
+
+        }
+
+        function searchBooks() {
+
+            const query = document.getElementById("searchInput")
+                .value.trim().toLowerCase();
+
+            const filtered = books.filter(function(book) {
+                return book.toLowerCase().includes(query);
+            });
+
+            displayBooks(filtered);
+
+            document.getElementById("message").innerText =
+                filtered.length + " course(s) found.";
+
+        }
+
+        function showAll() {
+
+            document.getElementById("searchInput").value = "";
+
+            displayBooks();
+
+            document.getElementById("message").innerText =
+                "Showing all available courses.";
+
+        }
+
+        displayBooks();
+
+    </script>
+
+</body>
+</html>
